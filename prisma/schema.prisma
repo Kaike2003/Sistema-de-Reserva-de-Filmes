@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id_user      String   @id @default(uuid())
+  name         String   @db.VarChar(255)
+  surname      String   @db.VarChar(255)
+  username     String   @unique @db.VarChar(255)
+  password     String   @db.VarChar(255)
+  email        String   @unique
+  birthday     DateTime
+  typeUser     TypeUser @default(regular)
+  autenticated Boolean  @default(false)
+  code         String   @unique @db.VarChar(255)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("users")
+}
+
+enum TypeUser {
+  admin
+  regular
+}
+
+model Movie {
+  id_movie    String      @id @default(uuid())
+  title       String      @db.VarChar(255)
+  description String      @db.Text()
+  imagem      String      @db.Text()
+  status      MovieStatus
+  published   Boolean     @default(false)
+
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt()
+  categoryId_category String
+  Category            Category[]
+  Display             Display[]
+  Capacity            Capacity[]
+  Movie_Reserve       Movie_Reserve[]
+
+  @@map("movies")
+}
+
+enum MovieStatus {
+  available
+  canceled
+  exhausted
+  ongoing
+}
+
+model Category {
+  id_category String @id @default(uuid())
+  gender      String @db.VarChar(255)
+
+  id_movie      Movie  @relation(fields: [movieId_movie], references: [id_movie])
+  movieId_movie String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("categorys")
+}
+
+model Display {
+  id_display String   @id @default(uuid())
+  time       DateTime @db.Time()
+  date       DateTime @db.Date()
+
+  id_movie      Movie  @relation(fields: [movieId_movie], references: [id_movie])
+  movieId_movie String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  @@map("displays")
+}
+
+model Capacity {
+  id_capicity String @id @default(uuid())
+  quantity    Int    @db.Int
+  accents     String @db.Text
+
+  id_movie      Movie  @relation(fields: [movieId_movie], references: [id_movie])
+  movieId_movie String
+  id_price      Price  @relation(fields: [priceId_price], references: [id_price])
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt()
+  priceId_price String
+
+  @@map("capacitys")
+}
+
+model Price {
+  id_price String @id @default(uuid())
+  name     String @db.VarChar(255)
+  value    Float
+
+  Capacity Capacity[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+}
+
+model Reserve {
+  id_reserve String @id @default(uuid())
+  value      Float
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt()
+  Movie_Reserve Movie_Reserve[]
+
+  @@map("reserves")
+}
+
+model Movie_Reserve {
+  id_movie_reserve  String  @id @default(uuid())
+  id_reserve        Reserve @relation(fields: [reserveId_reserve], references: [id_reserve])
+  reserveId_reserve String
+  id_movie          Movie   @relation(fields: [movieId_movie], references: [id_movie])
+  movieId_movie     String
+
+  @@map("movie_Reserves")
+}

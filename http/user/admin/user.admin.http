@@ -1,0 +1,55 @@
+###
+POST http://localhost:8888/admin-create
+Content-Type: application/json
+
+{
+  "name": "Kaike",
+  "surname": "bartolomeu",
+  "username": "kaikebartolomeu",
+  "password": "B12458Aa2@",
+  "email": "nextjsapi@gmail.com",
+  "birthday": "2002-08-31"
+}
+
+###
+PUT http://localhost:8888/admin-authenticate
+Content-Type: application/json
+
+{
+  "code": "Tn4UcvCR4"
+}
+
+###
+PUT http://localhost:8888/admin-update-data/:username
+Content-Type: application/json
+
+{
+  "name": "Kaike",
+  "surname": "bartolomeu",
+  "birthday": "2002-08-31"
+}
+
+###
+PUT http://localhost:8888/admin-update-password/:email
+Content-Type: application/json
+
+{
+  "username": "B12458Aa2@",
+}
+
+###
+PUT http://localhost:8888/admin-update-password/:username
+Content-Type: application/json
+
+{
+  "password": "B12458Aa2@",
+}
+
+###
+PUT http://localhost:8888/admin-update-email/:username
+Content-Type: application/json
+
+{
+  "email": "B12458Aa2@",
+}
+
