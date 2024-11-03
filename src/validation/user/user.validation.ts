@@ -58,6 +58,13 @@ export const userSchemaAuthenticate = z.object({
 });
 
 export const userSchemaCreate = userSchema;
+export const userSchemaUpdateData = userSchema.pick({
+  name: true,
+  surname: true,
+  username: true,
+  birthday: true,
+});
 
 export type TUserSchemaCreate = z.infer<typeof userSchemaCreate>;
 export type TUserSchemaAuthenticate = z.infer<typeof userSchemaAuthenticate>;
+export type TUserSchemaUpdateData = z.infer<typeof userSchemaUpdateData>;

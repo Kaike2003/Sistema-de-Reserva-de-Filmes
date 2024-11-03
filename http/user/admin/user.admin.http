@@ -20,13 +20,13 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8888/admin-update-data/:username
+PUT http://localhost:8888/admin-update-data/kaikebartolomeu
 Content-Type: application/json
 
 {
-  "name": "Kaike",
+  "name": "Milton",
   "surname": "bartolomeu",
-  "birthday": "2002-08-31"
+  "birthday": "2003-08-31"
 }
 
 ###

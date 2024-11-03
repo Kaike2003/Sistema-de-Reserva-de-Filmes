@@ -1,11 +1,17 @@
 import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
+  TUserSchemaUpdateData,
   userSchemaAuthenticate,
   userSchemaCreate,
+  userSchemaUpdateData,
 } from "../../../validation/user/user.validation";
 import { Request, Response } from "express";
 import UserAdminService from "./../../../service/user/admin/user.admin.service";
+
+interface ParamsUpdateByData {
+  username: string;
+}
 
 export default class UserAdminController {
   private constructor() {}
@@ -43,5 +49,19 @@ export default class UserAdminController {
       });
   }
 
-  public async updatebyData(req: Request, res: Response) {}
+  public async updatebyData(req: Request<ParamsUpdateByData>, res: Response) {
+    const data: TUserSchemaUpdateData = req.body;
+    const { username }: ParamsUpdateByData = req.params;
+
+    userSchemaUpdateData
+      .parseAsync({ ...data, username })
+      .then(async (e) => {
+        const service = UserAdminService.build();
+        const { status, message } = await service.updateByData(e);
+        res.status(status).json(message);
+      })
+      .catch((error) => {
+        res.status(400).json(error);
+      });
+  }
 }

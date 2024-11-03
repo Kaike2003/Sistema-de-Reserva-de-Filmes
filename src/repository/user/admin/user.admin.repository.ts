@@ -3,6 +3,7 @@ import { Output } from "../../../interface";
 import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
+  TUserSchemaUpdateData,
 } from "../../../validation/user/user.validation";
 import UserNodemailer from "../../../utils/nodemailer/user/nodemailer.user";
 import shortid from "shortid";
@@ -10,7 +11,7 @@ import UserRepositoryUtils from "../utils/verify/user.repository.utils";
 import Bcrypt from "../../../utils/bcrypt/bcrypt";
 
 export default class UserAdminRepository {
-  private constructor(private prisma: PrismaClient) {}
+  private constructor(private readonly prisma: PrismaClient) {}
 
   public static build(prisma: PrismaClient) {
     return new UserAdminRepository(prisma);
@@ -81,5 +82,31 @@ export default class UserAdminRepository {
     }
 
     return { status: 400, message: "Sua conta já está autenticada." };
+  }
+
+  public async updateByData(
+    data: TUserSchemaUpdateData
+  ): Promise<Output<string>> {
+    const { username } = data;
+    const verify = UserRepositoryUtils.build(this.prisma);
+    const verifyUsername = await verify.username(username);
+
+    if (verifyUsername) {
+      return await this.prisma.user
+        .update({
+          where: {
+            username,
+          },
+          data: { ...data },
+        })
+        .then(async (e) => {
+          return { status: 200, message: "Dados atualizados com sucesso." };
+        })
+        .catch((error) => {
+          return { status: 400, message: error };
+        });
+    }
+
+    return { status: 200, message: "Usuário inválido" };
   }
 }

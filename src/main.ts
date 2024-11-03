@@ -8,7 +8,7 @@ function main() {
 
   api.postAdd(adminUrl + "create", userAdmin.create);
   api.putAdd(adminUrl + "authenticate", userAdmin.authenticate);
-  api.putAdd(adminUrl + "update-data/:username", userAdmin.updatebyData);
+  api.putAdd(adminUrl + "update-data/:username", userAdmin.updatebyData as any);
 
   api.getRoutes();
   api.start(8888);

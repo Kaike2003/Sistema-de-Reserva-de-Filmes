@@ -4,6 +4,7 @@ import UserAdminRepositry from "../../../repository/user/admin/user.admin.reposi
 import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
+  TUserSchemaUpdateData,
 } from "./../../../validation/user/user.validation";
 
 export default class UserAdminService {
@@ -24,6 +25,14 @@ export default class UserAdminService {
   ): Promise<Output<string>> {
     const repository = UserAdminRepositry.build(prisma);
     const { message, status } = await repository.authenticate(data);
+    return { status, message };
+  }
+
+  public async updateByData(
+    data: TUserSchemaUpdateData
+  ): Promise<Output<string>> {
+    const repositry = UserAdminRepositry.build(prisma);
+    const { message, status } = await repositry.updateByData(data);
     return { status, message };
   }
 }
