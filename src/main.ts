@@ -17,6 +17,7 @@ function main() {
     adminUrl + "update-password/:username",
     userAdmin.updatePassword as any
   );
+  api.putAdd(adminUrl + "update-email/:username", userAdmin.updateEmail as any);
 
   api.getRoutes();
   api.start(8888);

@@ -125,6 +125,11 @@ export const userSchemaUpdatePassword = userSchema.pick({
   username: true,
 });
 
+export const userSchemaUpdateEmail = userSchema.pick({
+  email: true,
+  username: true,
+});
+
 export type TUserSchemaCreate = z.infer<typeof userSchemaCreate>;
 export type TUserSchemaAuthenticate = z.infer<typeof userSchemaAuthenticate>;
 export type TUserSchemaUpdateData = z.infer<typeof userSchemaUpdateData>;
@@ -134,3 +139,4 @@ export type TUserSchemaUpdateUsername = z.infer<
 export type TUserSchemaUpdatePassword = z.infer<
   typeof userSchemaUpdatePassword
 >;
+export type TUserSchemaUpdateEmail = z.infer<typeof userSchemaUpdateEmail>;

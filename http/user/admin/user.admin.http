@@ -47,10 +47,10 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8888/admin-update-email/:username
+PUT http://localhost:8888/admin-update-email/kaikebartolomeu
 Content-Type: application/json
 
 {
-  "email": "B12458Aa2@",
+  "email": "kaike@gmail.com"
 }
 

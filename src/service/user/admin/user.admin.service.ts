@@ -1,15 +1,17 @@
 import { Output } from "../../../interface";
+import { IUserAdminService } from "../../../interface/user/admin/service/user.admin.service";
 import { prisma } from "../../../prisma/prisma";
 import UserAdminRepositry from "../../../repository/user/admin/user.admin.repository";
 import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdateEmail,
   TUserSchemaUpdatePassword,
   TUserSchemaUpdateUsername,
 } from "./../../../validation/user/user.validation";
 
-export default class UserAdminService {
+export default class UserAdminService implements IUserAdminService {
   private constructor() {}
 
   public static build() {
@@ -51,6 +53,14 @@ export default class UserAdminService {
   ): Promise<Output<string>> {
     const repository = UserAdminRepositry.build(prisma);
     const { status, message } = await repository.updatePassword(data);
+    return { status, message };
+  }
+
+  public async updateEmail(
+    data: TUserSchemaUpdateEmail
+  ): Promise<Output<string>> {
+    const repository = UserAdminRepositry.build(prisma);
+    const { status, message } = await repository.updateEmail(data);
     return { status, message };
   }
 }

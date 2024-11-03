@@ -4,6 +4,7 @@ import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdateEmail,
   TUserSchemaUpdatePassword,
   TUserSchemaUpdateUsername,
 } from "../../../validation/user/user.validation";
@@ -11,8 +12,9 @@ import UserNodemailer from "../../../utils/nodemailer/user/nodemailer.user";
 import shortid from "shortid";
 import UserRepositoryUtils from "../utils/verify/user.repository.utils";
 import Bcrypt from "../../../utils/bcrypt/bcrypt";
+import { IUserAdminRepository } from "../../../interface/user/admin/repository/user.admin.repository";
 
-export default class UserAdminRepository {
+export default class UserAdminRepository implements IUserAdminRepository {
   private constructor(private readonly prisma: PrismaClient) {}
 
   public static build(prisma: PrismaClient) {
@@ -177,5 +179,34 @@ export default class UserAdminRepository {
     }
 
     return { status: 400, message: "Username inválido" };
+  }
+
+  public async updateEmail(
+    data: TUserSchemaUpdateEmail
+  ): Promise<Output<string>> {
+    const { email, username } = data;
+    const verify = UserRepositoryUtils.build(this.prisma);
+    const verifyEmail = await verify.email(email);
+    const verifyUsername = await verify.username(username);
+
+    if (verifyEmail) {
+      return { status: 400, message: "Email já sendo usado." };
+    }
+
+    if (verifyUsername && verifyEmail === false) {
+      return await this.prisma.user
+        .update({
+          where: { username },
+          data: { email },
+        })
+        .then((e) => {
+          return { status: 200, message: "Email atualizado com sucesso" };
+        })
+        .catch((error) => {
+          return { status: 400, message: error };
+        });
+    }
+
+    return { status: 400, message: "Username inválido." };
   }
 }
