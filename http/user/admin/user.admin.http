@@ -38,11 +38,12 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:8888/admin-update-password/:username
+PUT http://localhost:8888/admin-update-password/kaikebartolomeu
 Content-Type: application/json
 
 {
-  "password": "B12458Aa2@",
+  "passwordNew": "B12458Aa2@",
+  "passwordOld": "B12458Aa2@"
 }
 
 ###

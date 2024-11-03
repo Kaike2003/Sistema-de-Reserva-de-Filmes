@@ -2,10 +2,12 @@ import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdatePassword,
   TUserSchemaUpdateUsername,
   userSchemaAuthenticate,
   userSchemaCreate,
   userSchemaUpdateData,
+  userSchemaUpdatePassword,
   userSchemaUpdateUsername,
 } from "../../../validation/user/user.validation";
 import { Request, Response } from "express";
@@ -16,6 +18,10 @@ interface ParamsUpdateData {
 }
 interface ParamsUpdateUsername {
   email: string;
+}
+
+interface ParamsUpdatePassword {
+  username: string;
 }
 
 export default class UserAdminController {
@@ -82,6 +88,25 @@ export default class UserAdminController {
       .then(async (e) => {
         const service = UserAdminService.build();
         const { message, status } = await service.updateUsername(e);
+        res.status(status).json(message);
+      })
+      .catch((error) => {
+        res.status(400).json(error);
+      });
+  }
+
+  public async updatePassword(
+    req: Request<ParamsUpdatePassword>,
+    res: Response
+  ) {
+    const data: TUserSchemaUpdatePassword = req.body;
+    const { username }: ParamsUpdatePassword = req.params;
+
+    userSchemaUpdatePassword
+      .parseAsync({ ...data, username })
+      .then(async (e) => {
+        const service = UserAdminService.build();
+        const { status, message } = await service.updatePassword(e);
         res.status(status).json(message);
       })
       .catch((error) => {

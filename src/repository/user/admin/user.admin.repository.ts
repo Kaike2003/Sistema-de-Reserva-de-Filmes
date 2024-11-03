@@ -4,6 +4,7 @@ import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdatePassword,
   TUserSchemaUpdateUsername,
 } from "../../../validation/user/user.validation";
 import UserNodemailer from "../../../utils/nodemailer/user/nodemailer.user";
@@ -138,5 +139,43 @@ export default class UserAdminRepository {
     }
 
     return { status: 400, message: "Email inválido." };
+  }
+
+  public async updatePassword(
+    data: TUserSchemaUpdatePassword
+  ): Promise<Output<string>> {
+    const { username, passwordOld, passwordNew } = data;
+    const bcrypt = Bcrypt.build();
+    const verify = UserRepositoryUtils.build(this.prisma);
+    const { compare, hash } = bcrypt;
+    const verifyUsername = await verify.username(username);
+    const hashDb = await verify.getPassword(username);
+
+    if (verifyUsername && hashDb) {
+      const result = await compare(passwordOld, hashDb);
+
+      if (result) {
+        return await this.prisma.user
+          .update({
+            where: { username },
+            data: {
+              password: await hash(passwordNew),
+            },
+          })
+          .then(() => {
+            return {
+              status: 200,
+              message: "Palavra passe atualizada com sucesso.",
+            };
+          })
+          .catch((error) => {
+            return { status: 400, message: error };
+          });
+      }
+
+      return { status: 400, message: "Palavra passe antiga incorreta." };
+    }
+
+    return { status: 400, message: "Username inválido" };
   }
 }

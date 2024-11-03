@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 export default class UserRepositoryUtils {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private readonly prisma: PrismaClient) {}
 
   public static build(prisma: PrismaClient) {
     return new UserRepositoryUtils(prisma);
@@ -61,5 +61,17 @@ export default class UserRepositoryUtils {
     }
 
     return false;
+  }
+
+  public async getPassword(username: string): Promise<string | null> {
+    const res = await this.prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (res === null) {
+      return null;
+    }
+
+    return res.password;
   }
 }

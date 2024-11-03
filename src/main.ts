@@ -13,6 +13,10 @@ function main() {
     adminUrl + "update-username/:email",
     userAdmin.updateUsername as any
   );
+  api.putAdd(
+    adminUrl + "update-password/:username",
+    userAdmin.updatePassword as any
+  );
 
   api.getRoutes();
   api.start(8888);

@@ -5,6 +5,7 @@ import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdatePassword,
   TUserSchemaUpdateUsername,
 } from "./../../../validation/user/user.validation";
 
@@ -42,6 +43,14 @@ export default class UserAdminService {
   ): Promise<Output<string>> {
     const repository = UserAdminRepositry.build(prisma);
     const { message, status } = await repository.updateUsername(data);
+    return { status, message };
+  }
+
+  public async updatePassword(
+    data: TUserSchemaUpdatePassword
+  ): Promise<Output<string>> {
+    const repository = UserAdminRepositry.build(prisma);
+    const { status, message } = await repository.updatePassword(data);
     return { status, message };
   }
 }
