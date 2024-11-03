@@ -5,6 +5,7 @@ import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdateUsername,
 } from "./../../../validation/user/user.validation";
 
 export default class UserAdminService {
@@ -28,11 +29,19 @@ export default class UserAdminService {
     return { status, message };
   }
 
-  public async updateByData(
+  public async updateData(
     data: TUserSchemaUpdateData
   ): Promise<Output<string>> {
     const repositry = UserAdminRepositry.build(prisma);
-    const { message, status } = await repositry.updateByData(data);
+    const { message, status } = await repositry.updateData(data);
+    return { status, message };
+  }
+
+  public async updateUsername(
+    data: TUserSchemaUpdateUsername
+  ): Promise<Output<string>> {
+    const repository = UserAdminRepositry.build(prisma);
+    const { message, status } = await repository.updateUsername(data);
     return { status, message };
   }
 }

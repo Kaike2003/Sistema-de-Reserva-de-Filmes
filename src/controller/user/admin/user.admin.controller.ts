@@ -2,15 +2,20 @@ import {
   TUserSchemaAuthenticate,
   TUserSchemaCreate,
   TUserSchemaUpdateData,
+  TUserSchemaUpdateUsername,
   userSchemaAuthenticate,
   userSchemaCreate,
   userSchemaUpdateData,
+  userSchemaUpdateUsername,
 } from "../../../validation/user/user.validation";
 import { Request, Response } from "express";
 import UserAdminService from "./../../../service/user/admin/user.admin.service";
 
-interface ParamsUpdateByData {
+interface ParamsUpdateData {
   username: string;
+}
+interface ParamsUpdateUsername {
+  email: string;
 }
 
 export default class UserAdminController {
@@ -49,15 +54,34 @@ export default class UserAdminController {
       });
   }
 
-  public async updatebyData(req: Request<ParamsUpdateByData>, res: Response) {
+  public async updateData(req: Request<ParamsUpdateData>, res: Response) {
     const data: TUserSchemaUpdateData = req.body;
-    const { username }: ParamsUpdateByData = req.params;
+    const { username }: ParamsUpdateData = req.params;
 
     userSchemaUpdateData
       .parseAsync({ ...data, username })
       .then(async (e) => {
         const service = UserAdminService.build();
-        const { status, message } = await service.updateByData(e);
+        const { status, message } = await service.updateData(e);
+        res.status(status).json(message);
+      })
+      .catch((error) => {
+        res.status(400).json(error);
+      });
+  }
+
+  public async updateUsername(
+    req: Request<ParamsUpdateUsername>,
+    res: Response
+  ) {
+    const data: TUserSchemaUpdateUsername = req.body;
+    const { email }: ParamsUpdateUsername = req.params;
+
+    userSchemaUpdateUsername
+      .parseAsync({ ...data, email })
+      .then(async (e) => {
+        const service = UserAdminService.build();
+        const { message, status } = await service.updateUsername(e);
         res.status(status).json(message);
       })
       .catch((error) => {

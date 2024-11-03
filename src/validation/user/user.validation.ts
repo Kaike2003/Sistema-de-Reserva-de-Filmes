@@ -65,6 +65,14 @@ export const userSchemaUpdateData = userSchema.pick({
   birthday: true,
 });
 
+export const userSchemaUpdateUsername = userSchema.pick({
+  username: true,
+  email: true,
+});
+
 export type TUserSchemaCreate = z.infer<typeof userSchemaCreate>;
 export type TUserSchemaAuthenticate = z.infer<typeof userSchemaAuthenticate>;
 export type TUserSchemaUpdateData = z.infer<typeof userSchemaUpdateData>;
+export type TUserSchemaUpdateUsername = z.infer<
+  typeof userSchemaUpdateUsername
+>;
